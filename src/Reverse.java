@@ -13,12 +13,9 @@ public class Reverse extends JFrame {
 
     private Game game;
     private JPanel panel;
-    private JLabel label;
     private final int COLS = 8;
     private final int ROWS = 8;
 
-    private final int ROWSFIRST = 1;
-    private final int COLSFIRST = 2;
     private final int IMAGE_SIZE_FIRST = 250;
     private final int IMAGE_SIZE = 75;
 
@@ -52,9 +49,9 @@ public class Reverse extends JFrame {
             public void mousePressed(MouseEvent e)
             {
                 int x = e.getX() / IMAGE_SIZE_FIRST;
+                remove (panel);
                 if (x == 0)
                 {
-                    remove (panel);
                     ReverseComputer ();
                 } else {
                     ReverseHuman ();
@@ -62,15 +59,15 @@ public class Reverse extends JFrame {
             }
         });
         panel.setPreferredSize(new Dimension(
-                COLSFIRST * IMAGE_SIZE_FIRST,
-                ROWSFIRST * 100));
+                2 * IMAGE_SIZE_FIRST,
+                100));
         add (panel);
     }
 
     public void ReverseHuman ()
     {
         game = new Game (COLS, ROWS);
-        game.start();
+        game.start("Human");
         setImages();
         initLabel();
         initPanelHuman();
@@ -80,7 +77,7 @@ public class Reverse extends JFrame {
     public void ReverseComputer ()
     {
         game = new Game (COLS, ROWS);
-        game.start();
+        game.start("Computer");
         setImages();
         initLabel();
         initPanelComputer();
@@ -89,7 +86,7 @@ public class Reverse extends JFrame {
 
     private void initLabel ()
     {
-        label = new JLabel("Welcome!");
+        JLabel label = new JLabel("Welcome!");
         add (label, BorderLayout.SOUTH);
     }
     private void initPanelHuman ()
@@ -117,14 +114,19 @@ public class Reverse extends JFrame {
                 int y = e.getY() / IMAGE_SIZE;
                 Coord coord = new Coord (x, y);
                 game.pressLeftButtonHuman (coord);
-                label.setText(getMessage ());
                 panel.repaint();
                 if (game.getState() != GameState.PLAYING)
                 {
-                    if (game.getState() != GameState.WINNER)
-                        JOptionPane.showMessageDialog(null, "You won with the count: " + game.getCount ());
-                    else
-                        JOptionPane.showMessageDialog(null, "Opponent wins with the count: " + game.getCount ());
+                    if (game.getState() != GameState.NOONE) {
+                        if (game.getState() == GameState.WINNER)
+                        {
+                            JOptionPane.showMessageDialog(null, "Purple wins! The count is: " + game.getCount ());
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Blue wins! The count is: " + game.getCount ());
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null,  "No one has won!");
+                    }
                 }
             }
         });
@@ -158,14 +160,15 @@ public class Reverse extends JFrame {
                 int y = e.getY() / IMAGE_SIZE;
                 Coord coord = new Coord (x, y);
                 game.pressLeftButton (coord);
-                label.setText(getMessage ());
                 panel.repaint();
                 if (game.getState() != GameState.PLAYING)
                 {
-                    if (game.getState() != GameState.WINNER)
-                        JOptionPane.showMessageDialog(null, "You won with the count: " + game.getCount ());
-                    else
-                        JOptionPane.showMessageDialog(null, "Opponent wins with the count: " + game.getCount ());
+                    if (game.getState() != GameState.NOONE) {
+                        JOptionPane.showMessageDialog(null, "You are a " + game.getState() + "! The count of a winner is: " + game.getCount ());
+                    } else {
+                        JOptionPane.showMessageDialog(null,  "No one has won!");
+                    }
+
                 }
             }
         });
@@ -173,16 +176,6 @@ public class Reverse extends JFrame {
                 Ranges.getSize().x * IMAGE_SIZE,
                 Ranges.getSize().y * IMAGE_SIZE));
         add (panel);
-    }
-
-    private String getMessage()
-    {
-        switch(game.getState())
-        {
-            case LOST  : return "YOU LOSE!";
-            case WINNER: return "CONGRATULATIONS!";
-            default    : return "WELCOME!";
-        }
     }
 
     private void initFrame () {

@@ -3,6 +3,7 @@ package allreverse;
 public enum GameState
 {
     PLAYING,
-    LOST,
-    WINNER
+    LOSER,
+    WINNER,
+    NOONE;
 }

@@ -11,14 +11,14 @@ class Matrix
             matrix [coord.x] [coord.y] = defaultBox;
     }
 
-    Box get (Coord coord)
+    public Box get (Coord coord)
     {
         if (Ranges.inRange (coord))
             return matrix [coord.x] [coord.y];
         return null;
     }
 
-    void set (Coord coord, Box box)
+    public void set (Coord coord, Box box)
     {
         if (Ranges.inRange (coord))
             matrix [coord.x] [coord.y] = box;
