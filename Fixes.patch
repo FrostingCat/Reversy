@@ -1,0 +1,2064 @@
+Index: src/allreverse/Matrix.java
+===================================================================
+diff --git a/src/allreverse/Matrix.java b/src/allreverse/Matrix.java
+deleted file mode 100644
+--- a/src/allreverse/Matrix.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ /dev/null	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
+@@ -1,26 +0,0 @@
+-package allreverse;
+-
+-class Matrix
+-{
+-    private Box [] [] matrix;
+-
+-    Matrix (Box defaultBox)
+-    {
+-        matrix = new Box[Ranges.getSize().x][Ranges.getSize().y];
+-        for (Coord coord : Ranges.getAllCoords())
+-            matrix [coord.x] [coord.y] = defaultBox;
+-    }
+-
+-    Box get (Coord coord)
+-    {
+-        if (Ranges.inRange (coord))
+-            return matrix [coord.x] [coord.y];
+-        return null;
+-    }
+-
+-    void set (Coord coord, Box box)
+-    {
+-        if (Ranges.inRange (coord))
+-            matrix [coord.x] [coord.y] = box;
+-    }
+-}
+Index: src/allreverse/Ranges.java
+===================================================================
+diff --git a/src/allreverse/Ranges.java b/src/allreverse/Ranges.java
+deleted file mode 100644
+--- a/src/allreverse/Ranges.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ /dev/null	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
+@@ -1,34 +0,0 @@
+-package allreverse;
+-
+-import java.util.ArrayList;
+-
+-public class Ranges
+-{
+-    private static Coord size;
+-    private static ArrayList<Coord> allCoords;
+-    public static void setSize (Coord _size)
+-    {
+-        size = _size;
+-        allCoords = new ArrayList<Coord>();
+-        for (int y = 0; y < size.y; y ++)
+-            for (int x = 0; x < size.x; x ++)
+-                allCoords.add(new Coord(x, y));
+-    }
+-
+-    public static Coord getSize()
+-    {
+-        return size;
+-    }
+-
+-    public static ArrayList<Coord> getAllCoords ()
+-    {
+-        return allCoords;
+-    }
+-
+-    static boolean inRange (Coord coord)
+-    {
+-        return  coord.x >= 0 && coord.x < size.x &&
+-                coord.y >= 0 && coord.y < size.y;
+-    }
+-
+-}
+Index: src/allreverse/Coord.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/allreverse/Coord.java b/src/all/reversi/Coord.java
+rename from src/allreverse/Coord.java
+rename to src/all/reversi/Coord.java
+--- a/src/allreverse/Coord.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ b/src/all/reversi/Coord.java	(date 1669976108909)
+@@ -1,10 +1,10 @@
+-package allreverse;
++package all.reversi;
+ 
+ public class Coord {
+     public int x;
+     public int y;
+ 
+-    public Coord (int x, int y) {
++    public Coord(int x, int y) {
+         this.x = x;
+         this.y = y;
+     }
+Index: src/allreverse/Box.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/allreverse/Box.java b/src/all/reversi/util/Box.java
+rename from src/allreverse/Box.java
+rename to src/all/reversi/util/Box.java
+--- a/src/allreverse/Box.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ b/src/all/reversi/util/Box.java	(date 1669976108902)
+@@ -1,4 +1,6 @@
+-package allreverse;
++package all.reversi.util;
++
++import java.awt.*;
+ 
+ public enum Box {
+     ADVICE,
+@@ -8,5 +10,5 @@
+     QEASY,
+     USERS;
+ 
+-    public Object image;
++    public Image image;
+ }
+Index: src/all/reversi/Matrix.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/all/reversi/Matrix.java b/src/all/reversi/Matrix.java
+new file mode 100644
+--- /dev/null	(date 1669976108904)
++++ b/src/all/reversi/Matrix.java	(date 1669976108904)
+@@ -0,0 +1,25 @@
++package all.reversi;
++
++import all.reversi.util.Box;
++import all.reversi.util.Ranges;
++
++class Matrix {
++    private Box[][] matrix;
++
++    Matrix(Box defaultBox) {
++        matrix = new Box[Ranges.getSize().x][Ranges.getSize().y];
++        for (Coord coord : Ranges.getAllCoords())
++            matrix[coord.x][coord.y] = defaultBox;
++    }
++
++    Box get(Coord coord) {
++        if (Ranges.inRange(coord))
++            return matrix[coord.x][coord.y];
++        return null;
++    }
++
++    void set(Coord coord, Box box) {
++        if (Ranges.inRange(coord))
++            matrix[coord.x][coord.y] = box;
++    }
++}
+Index: src/allreverse/GameState.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/allreverse/GameState.java b/src/all/reversi/util/GameState.java
+rename from src/allreverse/GameState.java
+rename to src/all/reversi/util/GameState.java
+--- a/src/allreverse/GameState.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ b/src/all/reversi/util/GameState.java	(date 1669976108913)
+@@ -1,7 +1,6 @@
+-package allreverse;
++package all.reversi.util;
+ 
+-public enum GameState
+-{
++public enum GameState {
+     PLAYING,
+     LOST,
+     WINNER
+Index: src/all/reversi/util/Ranges.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/all/reversi/util/Ranges.java b/src/all/reversi/util/Ranges.java
+new file mode 100644
+--- /dev/null	(date 1669976108891)
++++ b/src/all/reversi/util/Ranges.java	(date 1669976108891)
+@@ -0,0 +1,37 @@
++package all.reversi.util;
++
++import all.reversi.Coord;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public final class Ranges {
++
++    private Ranges() {
++    }
++
++    private static Coord size;
++    private static ArrayList<Coord> allCoords;
++
++    public static void setSize(Coord newSize) {
++        size = newSize;
++        allCoords = new ArrayList<>();
++        for (int y = 0; y < size.y; y++)
++            for (int x = 0; x < size.x; x++)
++                allCoords.add(new Coord(x, y));
++    }
++
++    public static Coord getSize() {
++        return size;
++    }
++
++    public static List<Coord> getAllCoords() {
++        return allCoords;
++    }
++
++    public static boolean inRange(Coord coord) {
++        return coord.x >= 0 && coord.x < size.x &&
++                coord.y >= 0 && coord.y < size.y;
++    }
++
++}
+Index: src/allreverse/Game.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/allreverse/Game.java b/src/all/reversi/Game.java
+rename from src/allreverse/Game.java
+rename to src/all/reversi/Game.java
+--- a/src/allreverse/Game.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ b/src/all/reversi/Game.java	(date 1669981403546)
+@@ -1,101 +1,113 @@
+-package allreverse;
++package all.reversi;
++
++import all.reversi.util.Box;
++import all.reversi.util.Constants;
++import all.reversi.util.GameState;
++import all.reversi.util.Ranges;
+ 
+ import java.util.ArrayList;
++import java.util.function.Function;
+ 
+-public class Game
+-{
++public class Game {
+     Matrix startMap;
+     private static ArrayList<Coord> advices = new ArrayList<>();
+     private static ArrayList<Coord> purples = new ArrayList<>();
+     private static ArrayList<Coord> blues = new ArrayList<>();
+     private GameState state;
+     int purple = 1;
+-    public GameState getState()
+-    {
++
++    public GameState getState() {
+         return state;
+     }
+-    public Game (int cols, int rows)
+-    {
+-        Ranges.setSize(new Coord (cols, rows));
++
++    public Game(int cols, int rows) {
++        Ranges.setSize(new Coord(cols, rows));
+     }
+ 
+-    public void start ()
+-    {
++    public void start() {
+         startMap = new Matrix(Box.CELL);
+-        startMap.set (new Coord (4, 4), Box.PURPLE);
+-        startMap.set (new Coord (3, 3), Box.PURPLE);
+-        startMap.set (new Coord (3, 4), Box.BLUE);
+-        startMap.set (new Coord (4, 3), Box.BLUE);
+-        startMap.set (new Coord (2, 4), Box.ADVICE);
+-        startMap.set (new Coord (3, 5), Box.ADVICE);
+-        startMap.set (new Coord (4, 2), Box.ADVICE);
+-        startMap.set (new Coord (5, 3), Box.ADVICE);
+-        purples.add (new Coord (4, 4));
+-        purples.add (new Coord (3, 3));
+-        blues.add (new Coord (3, 4));
+-        blues.add (new Coord (4, 3));
+-        advices.add (new Coord (2, 4));
+-        advices.add (new Coord (3, 5));
+-        advices.add (new Coord (4, 2));
+-        advices.add (new Coord (5, 3));
++        startMap.set(new Coord(4, 4), Box.PURPLE);
++        startMap.set(new Coord(3, 3), Box.PURPLE);
++        startMap.set(new Coord(3, 4), Box.BLUE);
++        startMap.set(new Coord(4, 3), Box.BLUE);
++        startMap.set(new Coord(2, 4), Box.ADVICE);
++        startMap.set(new Coord(3, 5), Box.ADVICE);
++        startMap.set(new Coord(4, 2), Box.ADVICE);
++        startMap.set(new Coord(5, 3), Box.ADVICE);
++        purples.add(new Coord(4, 4));
++        purples.add(new Coord(3, 3));
++        blues.add(new Coord(3, 4));
++        blues.add(new Coord(4, 3));
++        advices.add(new Coord(2, 4));
++        advices.add(new Coord(3, 5));
++        advices.add(new Coord(4, 2));
++        advices.add(new Coord(5, 3));
+         state = GameState.PLAYING;
+     }
+ 
+-    public Box getBox (Coord coord) // что будет в той или иной части экрана
++    public Box getBox(Coord coord) // что будет в той или иной части экрана
+     {
+         return startMap.get(coord);
+     }
+ 
+-    public void pressLeftButton (Coord coord)
+-    {
+-        //if (getBox(coord) == Box.ADVICE) {
++    public void pressLeftButton(Coord coord) {
+         startMap.set(coord, Box.PURPLE);
+         purples.add(new Coord(coord.x, coord.y));
+         int i = 0;
+-        for (Coord check : advices)
+-        {
+-            if (check.x == coord.x && check.y == coord.y)
+-            {
++        for (Coord check : advices) {
++            if (check.x == coord.x && check.y == coord.y) {
+                 advices.remove(i);
+                 break;
+             }
+             i++;
+         }
++    }
+ 
++    public void createBlue(Coord coord, CompletionHandler completionHandler) {
+         checkIfBlue(coord, Box.BLUE, Box.PURPLE);
+-        placeBlue();
+-        if (purples.size() + blues.size() == 64) {
+-            checkWinner();
+-        }
+-        //checkAdvices();
+-        //changeAdvices();
+-        //}
++
++        new Thread() {
++            @Override
++            public void run() {
++                super.run();
++                try {
++                    Thread.sleep(500);
++                } catch (InterruptedException e) {
++                    throw new RuntimeException(e);
++                }
++
++                placeBlue();
++
++                if (purples.size() + blues.size() == 64) {
++                    checkWinner();
++                }
++
++                completionHandler.handle();
++            }
++        }.start();
+     }
+-    public void pressLeftButtonHuman (Coord coord)
+-    {
++
++    public void pressLeftButtonHuman(Coord coord) {
+         //if (getBox(coord) == Box.ADVICE)
+         //{
+-        if (purple == 1)
+-        {
+-            startMap.set (coord, Box.PURPLE);
+-            purples.add (new Coord(coord.x, coord.y));
+-            checkIfBlue (coord, Box.BLUE, Box.PURPLE);
++        if (purple == 1) {
++            startMap.set(coord, Box.PURPLE);
++            purples.add(new Coord(coord.x, coord.y));
++            checkIfBlue(coord, Box.BLUE, Box.PURPLE);
+             purple = 0;
+         } else {
+-            startMap.set (coord, Box.BLUE);
+-            blues.add (new Coord(coord.x, coord.y));
+-            checkIfBlue (coord, Box.PURPLE, Box.BLUE);
++            startMap.set(coord, Box.BLUE);
++            blues.add(new Coord(coord.x, coord.y));
++            checkIfBlue(coord, Box.PURPLE, Box.BLUE);
+             purple = 1;
+         }
+         if (purples.size() + blues.size() == 64) {
+-            checkWinner ();
++            checkWinner();
+         }
+     }
+ 
+-    public void checkWinner ()
+-    {
+-        if (purples.size() > blues.size())
+-        {
++    public void checkWinner() {
++        if (purples.size() > blues.size()) {
+             state = GameState.WINNER;
+         } else {
+             state = GameState.LOST;
+@@ -105,8 +117,7 @@
+         advices.clear();
+     }
+ 
+-    public int getCount ()
+-    {
++    public int getCount() {
+         if (state == GameState.WINNER) {
+             return purples.size();
+         } else {
+@@ -114,22 +125,19 @@
+         }
+     }
+ 
+-    public double funcSum (int n, int isSide, int putCorner, int putSide)
+-    {
++    public double funcSum(int n, int isSide, int putCorner, int putSide) {
+         double sum;
+         sum = n * isSide + 0.8 * putCorner + 0.4 * putSide;
+         return sum;
+     }
+ 
+-    public void placeBlue ()
+-    {
++    public void placeBlue() {
+         ArrayList<Double> allSums = new ArrayList<>();
+         ArrayList<Coord> variant = new ArrayList<>();
+         ArrayList<Coord> oneBlue = new ArrayList<>();
+         ArrayList<Integer> cases = new ArrayList<>();
+         double[] res = new double[9];
+-        for (int i = 0; i < blues.size(); i ++)
+-        {
++        for (int i = 0; i < blues.size(); i++) {
+             int x = blues.get(i).x;
+             int y = blues.get(i).y;
+             int countPurple = 0;
+@@ -139,8 +147,7 @@
+             int putSide = 0;
+             // случай 1: слева сверху
+             Coord coord = new Coord(x - 1, y - 1);
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.x == 0 || coord.y == 0) {
+                     stop = 1;
+                     break;
+@@ -166,8 +173,7 @@
+             putSide = 0;
+             countPurple = 0;
+ 
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.x == 0 || coord.y == 7) {
+                     stop = 1;
+                     break;
+@@ -193,8 +199,7 @@
+             putSide = 0;
+             countPurple = 0;
+ 
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.x == 7 || coord.y == 0) {
+                     stop = 1;
+                     break;
+@@ -220,8 +225,7 @@
+             putSide = 0;
+             countPurple = 0;
+ 
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.x == 7 || coord.y == 7) {
+                     stop = 1;
+                     break;
+@@ -247,8 +251,7 @@
+             putSide = 0;
+             countPurple = 0;
+ 
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.y == 0) {
+                     stop = 1;
+                     break;
+@@ -257,7 +260,7 @@
+                 countPurple += 1;
+             }
+             if (coord.y != y - 1 && stop != 1 && getBox(coord) != Box.BLUE) {
+-                if ((coord.x == 0 && coord.y == 0) || (coord.x == 7 && coord.y == 0)){
++                if ((coord.x == 0 && coord.y == 0) || (coord.x == 7 && coord.y == 0)) {
+                     putCorner = 1;
+                     isSide = 2;
+                 } else if (coord.x == 0 || coord.x == 7) {
+@@ -274,8 +277,7 @@
+             putSide = 0;
+             countPurple = 0;
+ 
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.x == 0) {
+                     stop = 1;
+                     break;
+@@ -301,8 +303,7 @@
+             putSide = 0;
+             countPurple = 0;
+ 
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.y == 7) {
+                     stop = 1;
+                     break;
+@@ -328,8 +329,7 @@
+             putSide = 0;
+             countPurple = 0;
+ 
+-            while (getBox(coord) == Box.PURPLE)
+-            {
++            while (getBox(coord) == Box.PURPLE) {
+                 if (coord.x == 7) {
+                     stop = 1;
+                     break;
+@@ -349,7 +349,7 @@
+             oneBlue.add(new Coord(coord.x, coord.y));
+             double maxNum = res[0]; // максимальное значение у одной фишки
+             int maxPlace = 0;
+-            for (int j = 0; j < 9; j ++) {
++            for (int j = 0; j < 9; j++) {
+                 if (res[j] > maxNum) {
+                     maxNum = res[j];
+                     maxPlace = j;
+@@ -362,15 +362,14 @@
+         }
+         double max = allSums.get(0);
+         int maxPlace = 0;
+-        for (int j = 0; j < allSums.size(); j ++) {
++        for (int j = 0; j < allSums.size(); j++) {
+             if (allSums.get(j) > max) {
+                 max = allSums.get(j);
+                 maxPlace = j;
+             }
+         }
+-        if (max > 0)
+-        {
+-            startMap.set (variant.get(maxPlace), Box.BLUE);
++        if (max > 0) {
++            startMap.set(variant.get(maxPlace), Box.BLUE);
+             placeAllBlues(cases.get(maxPlace), variant.get(maxPlace));
+         }
+         allSums.clear();
+@@ -379,26 +378,25 @@
+         cases.clear();
+     }
+ 
+-    public void placeAllBlues (Integer oneCase, Coord coord)
+-    {
++    public void placeAllBlues(Integer oneCase, Coord coord) {
+         int x, y;
+         if (oneCase == 0) {
+-            x = - 1;
+-            y = - 1;
++            x = -1;
++            y = -1;
+         } else if (oneCase == 1) {
+-            x = - 1;
++            x = -1;
+             y = 1;
+         } else if (oneCase == 2) {
+             x = 1;
+-            y = - 1;
++            y = -1;
+         } else if (oneCase == 3) {
+             x = 1;
+             y = 1;
+         } else if (oneCase == 4) {
+             x = 0;
+-            y = - 1;
++            y = -1;
+         } else if (oneCase == 5) {
+-            x = - 1;
++            x = -1;
+             y = 0;
+         } else if (oneCase == 6) {
+             x = 0;
+@@ -407,28 +405,25 @@
+             x = 1;
+             y = 0;
+         }
+-        addSecond (Box.BLUE, coord);
++        addSecond(Box.BLUE, coord);
+         coord.x -= x;
+         coord.y -= y;
+-        while (getBox(coord) == Box.PURPLE)
+-        {
+-            startMap.set (coord, Box.BLUE);
+-            addSecond (Box.BLUE, coord);
++        while (getBox(coord) == Box.PURPLE) {
++            startMap.set(coord, Box.BLUE);
++            addSecond(Box.BLUE, coord);
+             coord.x -= x;
+             coord.y -= y;
+         }
+     }
+ 
+-    public void checkIfBlue (Coord check, Box first, Box intoSecond)
+-    {
++    public void checkIfBlue(Coord check, Box first, Box intoSecond) {
+         int x = check.x;
+         int y = check.y;
+         int stop = 0;
+ 
+         // случай 1: слева сверху
+         Coord coord = new Coord(x - 1, y - 1);
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.x == 0 || coord.y == 0) {
+                 stop = 1;
+                 break;
+@@ -439,10 +434,9 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x - 1) {
+             coord.x = x - 1;
+             coord.y = y - 1;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.x -= 1;
+                 coord.y -= 1;
+             }
+@@ -452,8 +446,7 @@
+         coord.y = y + 1;
+         stop = 0;
+ 
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.x == 0 || coord.y == 7) {
+                 stop = 1;
+                 break;
+@@ -464,10 +457,9 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x - 1) {
+             coord.x = x - 1;
+             coord.y = y + 1;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.x -= 1;
+                 coord.y += 1;
+             }
+@@ -477,8 +469,7 @@
+         coord.y = y - 1;
+         stop = 0;
+ 
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.x == 7 || coord.y == 0) {
+                 stop = 1;
+                 break;
+@@ -489,10 +480,9 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x + 1) {
+             coord.x = x + 1;
+             coord.y = y - 1;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.x += 1;
+                 coord.y -= 1;
+             }
+@@ -502,8 +492,7 @@
+         coord.y = y + 1;
+         stop = 0;
+ 
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.x == 7 || coord.y == 7) {
+                 stop = 1;
+                 break;
+@@ -514,10 +503,9 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x + 1) {
+             coord.x = x + 1;
+             coord.y = y + 1;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.x += 1;
+                 coord.y += 1;
+             }
+@@ -527,8 +515,7 @@
+         coord.y = y - 1;
+         stop = 0;
+ 
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.y == 0) {
+                 stop = 1;
+                 break;
+@@ -538,10 +525,9 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.y != y - 1) {
+             coord.x = x;
+             coord.y = y - 1;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.y -= 1;
+             }
+         }
+@@ -550,8 +536,7 @@
+         coord.y = y;
+         stop = 0;
+ 
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.x == 0) {
+                 stop = 1;
+                 break;
+@@ -561,10 +546,9 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x - 1) {
+             coord.x = x - 1;
+             coord.y = y;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.x -= 1;
+             }
+         }
+@@ -573,8 +557,7 @@
+         coord.y = y + 1;
+         stop = 0;
+ 
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.y == 7) {
+                 stop = 1;
+                 break;
+@@ -584,10 +567,9 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.y != y - 1) {
+             coord.x = x;
+             coord.y = y + 1;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.y += 1;
+             }
+         }
+@@ -596,8 +578,7 @@
+         coord.y = y;
+         stop = 0;
+ 
+-        while (getBox(coord) == first)
+-        {
++        while (getBox(coord) == first) {
+             if (coord.x == 7) {
+                 stop = 1;
+                 break;
+@@ -607,24 +588,20 @@
+         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x + 1) {
+             coord.x = x + 1;
+             coord.y = y;
+-            while (getBox(coord) == first)
+-            {
+-                startMap.set (coord, intoSecond);
+-                addSecond (intoSecond, coord);
++            while (getBox(coord) == first) {
++                startMap.set(coord, intoSecond);
++                addSecond(intoSecond, coord);
+                 coord.x += 1;
+             }
+         }
+     }
+ 
+-    public void addSecond (Box addInto, Coord coord)
+-    {
++    public void addSecond(Box addInto, Coord coord) {
+         if (addInto == Box.PURPLE) {
+             purples.add(new Coord(coord.x, coord.y));
+             int i = 0;
+-            for (Coord check : blues)
+-            {
+-                if (check.x == coord.x && check.y == coord.y)
+-                {
++            for (Coord check : blues) {
++                if (check.x == coord.x && check.y == coord.y) {
+                     blues.remove(i);
+                     break;
+                 }
+@@ -633,10 +610,8 @@
+         } else {
+             blues.add(new Coord(coord.x, coord.y));
+             int j = 0;
+-            for (Coord check : purples)
+-            {
+-                if (check.x == coord.x && check.y == coord.y)
+-                {
++            for (Coord check : purples) {
++                if (check.x == coord.x && check.y == coord.y) {
+                     purples.remove(j);
+                     break;
+                 }
+@@ -645,17 +620,14 @@
+         }
+     }
+ 
+-    public void checkAdvices ()
+-    {
+-        for (int i = 0; i < blues.size(); i ++)
+-        {
++    public void checkAdvices() {
++        for (int i = 0; i < blues.size(); i++) {
+             int x = blues.get(i).x;
+             int y = blues.get(i).y;
+             int stop = 0;
+             // случай 1: слева сверху
+             Coord coord = new Coord(x - 1, y - 1);
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.x == 0 || coord.y == 0) {
+                     stop = 1;
+                     break;
+@@ -665,7 +637,7 @@
+             }
+             if (coord.x != x - 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x + 1, y + 1);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+             // случай 2: слева снизу
+@@ -673,8 +645,7 @@
+             coord.y = y + 1;
+             stop = 0;
+ 
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.x == 0 || coord.y == 7) {
+                     stop = 1;
+                     break;
+@@ -684,7 +655,7 @@
+             }
+             if (coord.x != x - 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x + 1, y - 1);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+             // случай 3: справа сверху
+@@ -692,8 +663,7 @@
+             coord.y = y - 1;
+             stop = 0;
+ 
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.x == 7 || coord.y == 0) {
+                     stop = 1;
+                     break;
+@@ -703,7 +673,7 @@
+             }
+             if (coord.x != x + 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x - 1, y + 1);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+             // случай 4: справа снизу
+@@ -711,8 +681,7 @@
+             coord.y = y + 1;
+             stop = 0;
+ 
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.x == 7 || coord.y == 7) {
+                     stop = 1;
+                     break;
+@@ -722,7 +691,7 @@
+             }
+             if (coord.x != x + 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x - 1, y - 1);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+             // случай 5: сверху
+@@ -730,8 +699,7 @@
+             coord.y = y - 1;
+             stop = 0;
+ 
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.y == 0) {
+                     stop = 1;
+                     break;
+@@ -740,7 +708,7 @@
+             }
+             if (coord.y != y - 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x, y + 1);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+             // случай 6: слева
+@@ -748,8 +716,7 @@
+             coord.y = y;
+             stop = 0;
+ 
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.x == 0) {
+                     stop = 1;
+                     break;
+@@ -758,7 +725,7 @@
+             }
+             if (coord.x != x - 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x + 1, y);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+             // случай 7: снизу
+@@ -766,8 +733,7 @@
+             coord.y = y + 1;
+             stop = 0;
+ 
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.y == 7) {
+                     stop = 1;
+                     break;
+@@ -776,7 +742,7 @@
+             }
+             if (coord.y != y + 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x, y - 1);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+             // случай 8: справа
+@@ -784,8 +750,7 @@
+             coord.y = y;
+             stop = 0;
+ 
+-            while (getBox(coord) == Box.BLUE)
+-            {
++            while (getBox(coord) == Box.BLUE) {
+                 if (coord.x == 7) {
+                     stop = 1;
+                     break;
+@@ -794,17 +759,15 @@
+             }
+             if (coord.x != x + 1 && stop != 1 && getBox(coord) == Box.PURPLE) {
+                 Coord check = new Coord(x - 1, y);
+-                startMap.set (check, Box.ADVICE);
++                startMap.set(check, Box.ADVICE);
+                 advices.add(new Coord(check.x, check.y));
+             }
+         }
+     }
+ 
+-    public void changeAdvices ()
+-    {
+-        for (Coord coord : advices)
+-        {
+-            startMap.set (coord, Box.CELL);
++    public void changeAdvices() {
++        for (Coord coord : advices) {
++            startMap.set(coord, Box.CELL);
+         }
+     }
+ }
+Index: src/all/reversi/CompletionHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/all/reversi/CompletionHandler.java b/src/all/reversi/CompletionHandler.java
+new file mode 100644
+--- /dev/null	(date 1669980934221)
++++ b/src/all/reversi/CompletionHandler.java	(date 1669980934221)
+@@ -0,0 +1,7 @@
++package all.reversi;
++
++@FunctionalInterface
++public interface CompletionHandler {
++
++    void handle();
++}
+Index: src/allreverse/Advices.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/allreverse/Advices.java b/src/all/reversi/Advices.java
+rename from src/allreverse/Advices.java
+rename to src/all/reversi/Advices.java
+--- a/src/allreverse/Advices.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ b/src/all/reversi/Advices.java	(date 1669976108901)
+@@ -1,9 +1,8 @@
+-package allreverse;
++package all.reversi;
+ 
+ import java.util.ArrayList;
+ 
+-public class Advices
+-{
++public class Advices {
+ 
+ 
+ }
+Index: src/all/reversi/util/Constants.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/all/reversi/util/Constants.java b/src/all/reversi/util/Constants.java
+new file mode 100644
+--- /dev/null	(date 1669976108910)
++++ b/src/all/reversi/util/Constants.java	(date 1669976108910)
+@@ -0,0 +1,13 @@
++package all.reversi.util;
++
++public final class Constants {
++    private Constants() {
++    }
++
++    public static final int COLS = 8;
++    public static final int ROWS = 8;
++    public static final int ROWS_FIRST = 1;
++    public static final int COLS_FIRST = 2;
++    public static final int IMAGE_SIZE_FIRST = 250;
++    public static final int IMAGE_SIZE = 75;
++}
+Index: src/Reverse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Reverse.java b/src/all/reversi/Reverse.java
+rename from src/Reverse.java
+rename to src/all/reversi/Reverse.java
+--- a/src/Reverse.java	(revision 606d3f9eed3a5d4702a3a2ea69121db489ee8ffe)
++++ b/src/all/reversi/Reverse.java	(date 1669981539777)
+@@ -1,75 +1,66 @@
+-import allreverse.Box;
+-import allreverse.Coord;
+-import allreverse.Game;
+-import allreverse.GameState;
+-import allreverse.Ranges;
++package all.reversi;
++
++import all.reversi.util.Box;
++import all.reversi.util.Constants;
++import all.reversi.util.GameState;
++import all.reversi.util.Ranges;
+ 
+ import javax.swing.*;
+ import java.awt.*;
+ import java.awt.event.MouseAdapter;
+ import java.awt.event.MouseEvent;
++import java.util.concurrent.Semaphore;
++import java.util.concurrent.atomic.AtomicBoolean;
+ 
+ public class Reverse extends JFrame {
+ 
+     private Game game;
+     private JPanel panel;
+     private JLabel label;
+-    private final int COLS = 8;
+-    private final int ROWS = 8;
+ 
+-    private final int ROWSFIRST = 1;
+-    private final int COLSFIRST = 2;
+-    private final int IMAGE_SIZE_FIRST = 250;
+-    private final int IMAGE_SIZE = 75;
++    private final AtomicBoolean isMouseCanBePressed = new AtomicBoolean(true);
++
++    private final Semaphore semaphore = new Semaphore(1);
+ 
+     public static void main(String[] args) {
+         new Reverse();
+     }
+ 
+-    private Reverse ()
+-    {
++    private Reverse() {
+         initPanelMain();
+         initFrame();
+     }
+ 
+-
+-    private void initPanelMain ()
+-    {
+-        panel = new JPanel()
+-        {
++    private void initPanelMain() {
++        panel = new JPanel() {
+             @Override
+-            protected void paintComponent(Graphics g)
+-            {
++            protected void paintComponent(Graphics g) {
+                 super.paintComponent(g);
+                 g.drawImage(getImage("qeasy"), 0, 0, this);
+-                g.drawImage(getImage("users"), IMAGE_SIZE_FIRST, 0, this);
++                g.drawImage(getImage("users"), Constants.IMAGE_SIZE_FIRST, 0, this);
+             }
+         };
+ 
+-        panel.addMouseListener(new MouseAdapter()
+-        {
++        panel.addMouseListener(new MouseAdapter() {
+             @Override
+-            public void mousePressed(MouseEvent e)
+-            {
+-                int x = e.getX() / IMAGE_SIZE_FIRST;
+-                if (x == 0)
+-                {
+-                    remove (panel);
+-                    ReverseComputer ();
++            public void mousePressed(MouseEvent e) {
++                int x = e.getX() / Constants.IMAGE_SIZE_FIRST;
++                if (x == 0) {
++                    remove(panel);
++                    reverseComputer();
+                 } else {
+-                    ReverseHuman ();
++                    reverseHuman();
+                 }
+             }
+         });
+         panel.setPreferredSize(new Dimension(
+-                COLSFIRST * IMAGE_SIZE_FIRST,
+-                ROWSFIRST * 100));
+-        add (panel);
++                Constants.COLS_FIRST * Constants.IMAGE_SIZE_FIRST,
++                Constants.ROWS_FIRST * 100));
++        add(panel);
+     }
+ 
+-    public void ReverseHuman ()
+-    {
+-        game = new Game (COLS, ROWS);
++    public void reverseHuman() {
++        game = new Game(Constants.COLS, Constants.ROWS);
+         game.start();
+         setImages();
+         initLabel();
+@@ -77,9 +68,8 @@
+         initFrame();
+     }
+ 
+-    public void ReverseComputer ()
+-    {
+-        game = new Game (COLS, ROWS);
++    public void reverseComputer() {
++        game = new Game(Constants.COLS, Constants.ROWS);
+         game.start();
+         setImages();
+         initLabel();
+@@ -87,105 +77,92 @@
+         initFrame();
+     }
+ 
+-    private void initLabel ()
+-    {
++    private void initLabel() {
+         label = new JLabel("Welcome!");
+-        add (label, BorderLayout.SOUTH);
++        add(label, BorderLayout.SOUTH);
+     }
+-    private void initPanelHuman ()
+-    {
+-        panel = new JPanel()
+-        {
+-            @Override
+-            protected void paintComponent(Graphics g)
+-            {
+-                super.paintComponent(g);
+-                for (Coord coord : Ranges.getAllCoords())
+-                {
+-                    g.drawImage((Image) game.getBox(coord).image,
+-                            coord.x * IMAGE_SIZE, coord.y * IMAGE_SIZE, this);
+-                }
+-            }
+-        };
+ 
+-        panel.addMouseListener(new MouseAdapter()
+-        {
++    private void initPanelHuman() {
++        panel = createPanel();
++
++        panel.addMouseListener(new MouseAdapter() {
+             @Override
+-            public void mousePressed(MouseEvent e)
+-            {
+-                int x = e.getX() / IMAGE_SIZE;
+-                int y = e.getY() / IMAGE_SIZE;
+-                Coord coord = new Coord (x, y);
+-                game.pressLeftButtonHuman (coord);
+-                label.setText(getMessage ());
+-                panel.repaint();
+-                if (game.getState() != GameState.PLAYING)
+-                {
+-                    if (game.getState() != GameState.WINNER)
+-                        JOptionPane.showMessageDialog(null, "You won with the count: " + game.getCount ());
+-                    else
+-                        JOptionPane.showMessageDialog(null, "Opponent wins with the count: " + game.getCount ());
++            public void mousePressed(MouseEvent e) {
++                if (isMouseCanBePressed.getAndSet(false)) {
++                    int x = e.getX() / Constants.IMAGE_SIZE;
++                    int y = e.getY() / Constants.IMAGE_SIZE;
++                    Coord coord = new Coord(x, y);
++                    game.pressLeftButtonHuman(coord);
++                    label.setText(getMessage());
++                    panel.repaint();
++
++                    game.createBlue(coord, () -> {
++                        panel.repaint();
++                        semaphore.release();
++                    });
++
++                    if (game.getState() != GameState.PLAYING) {
++                        if (game.getState() != GameState.WINNER)
++                            JOptionPane.showMessageDialog(null, "You won with the count: " + game.getCount());
++                        else
++                            JOptionPane.showMessageDialog(null, "Opponent wins with the count: " + game.getCount());
++                    }
+                 }
+             }
+         });
+         panel.setPreferredSize(new Dimension(
+-                Ranges.getSize().x * IMAGE_SIZE,
+-                Ranges.getSize().y * IMAGE_SIZE));
+-        add (panel);
++                Ranges.getSize().x * Constants.IMAGE_SIZE,
++                Ranges.getSize().y * Constants.IMAGE_SIZE));
++        add(panel);
+     }
+-    private void initPanelComputer ()
+-    {
+-        panel = new JPanel()
+-        {
+-            @Override
+-            protected void paintComponent(Graphics g)
+-            {
+-                super.paintComponent(g);
+-                for (Coord coord : Ranges.getAllCoords())
+-                {
+-                    g.drawImage((Image) game.getBox(coord).image,
+-                            coord.x * IMAGE_SIZE, coord.y * IMAGE_SIZE, this);
+-                }
+-            }
+-        };
+ 
+-        panel.addMouseListener(new MouseAdapter()
+-        {
++    private void initPanelComputer() {
++        panel = createPanel();
++
++        panel.addMouseListener(new MouseAdapter() {
+             @Override
+-            public void mousePressed(MouseEvent e)
+-            {
+-                int x = e.getX() / IMAGE_SIZE;
+-                int y = e.getY() / IMAGE_SIZE;
+-                Coord coord = new Coord (x, y);
+-                game.pressLeftButton (coord);
+-                label.setText(getMessage ());
+-                panel.repaint();
+-                if (game.getState() != GameState.PLAYING)
+-                {
+-                    if (game.getState() != GameState.WINNER)
+-                        JOptionPane.showMessageDialog(null, "You won with the count: " + game.getCount ());
+-                    else
+-                        JOptionPane.showMessageDialog(null, "Opponent wins with the count: " + game.getCount ());
++            public void mousePressed(MouseEvent e) {
++                if (isMouseCanBePressed.getAndSet(false)) {
++                    System.out.println("Pressed");
++                    int x = e.getX() / Constants.IMAGE_SIZE;
++                    int y = e.getY() / Constants.IMAGE_SIZE;
++                    Coord coord = new Coord(x, y);
++                    game.pressLeftButton(coord);
++                    label.setText(getMessage());
++                    panel.repaint();
++
++                    game.createBlue(coord, () -> {
++                        panel.repaint();
++                        semaphore.release();
++                    });
++
++                    if (game.getState() != GameState.PLAYING) {
++                        if (game.getState() != GameState.WINNER)
++                            JOptionPane.showMessageDialog(null, "You won with the count: " + game.getCount());
++                        else
++                            JOptionPane.showMessageDialog(null, "Opponent wins with the count: " + game.getCount());
++                    }
++
++                    isMouseCanBePressed.set(true);
+                 }
+             }
+         });
+         panel.setPreferredSize(new Dimension(
+-                Ranges.getSize().x * IMAGE_SIZE,
+-                Ranges.getSize().y * IMAGE_SIZE));
+-        add (panel);
++                Ranges.getSize().x * Constants.IMAGE_SIZE,
++                Ranges.getSize().y * Constants.IMAGE_SIZE));
++
++        add(panel);
+     }
+ 
+-    private String getMessage()
+-    {
+-        switch(game.getState())
+-        {
+-            case LOST  : return "YOU LOSE!";
+-            case WINNER: return "CONGRATULATIONS!";
+-            default    : return "WELCOME!";
+-        }
++    private String getMessage() {
++        return switch (game.getState()) {
++            case LOST -> "YOU LOSE!";
++            case WINNER -> "CONGRATULATIONS!";
++            default -> "WELCOME!";
++        };
+     }
+ 
+-    private void initFrame () {
++    private void initFrame() {
+         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // автоматическое прекращение работы проги
+         setTitle("Reversy");
+         pack();
+@@ -195,15 +172,28 @@
+         setIconImage(getImage("blue"));
+     }
+ 
+-    private void setImages () {
+-        for (allreverse.Box box : Box.values()) {
++    private void setImages() {
++        for (all.reversi.util.Box box : Box.values()) {
+             box.image = getImage(box.name().toLowerCase());
+         }
+     }
+ 
+-    private Image getImage (String name) {
+-        String filename = "img/" + name.toLowerCase() + ".jpg";
+-        ImageIcon icon = new ImageIcon(getClass().getResource(filename));
++    private Image getImage(String name) {
++        // TODO: NullPointerException
++        ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("img/" + name.toLowerCase() + ".jpg"));
+         return icon.getImage();
+     }
++
++    private JPanel createPanel() {
++        return new JPanel() {
++            @Override
++            protected void paintComponent(Graphics g) {
++                super.paintComponent(g);
++                for (Coord coord : Ranges.getAllCoords()) {
++                    g.drawImage(game.getBox(coord).image,
++                            coord.x * Constants.IMAGE_SIZE, coord.y * Constants.IMAGE_SIZE, this);
++                }
++            }
++        };
++    }
+ }
+Index: src/all/reversi/Circle.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/all/reversi/Circle.java b/src/all/reversi/Circle.java
+new file mode 100644
+--- /dev/null	(date 1669977915253)
++++ b/src/all/reversi/Circle.java	(date 1669977915253)
+@@ -0,0 +1,29 @@
++package all.reversi;
++
++import all.reversi.util.Box;
++
++import javax.swing.*;
++import java.awt.*;
++
++import static java.awt.Image.SCALE_SMOOTH;
++
++public class Circle extends JPanel {
++
++    private Box box;
++
++    public Circle(Box box) {
++        super();
++        this.box = box;
++    }
++
++    public void changeColor(Box box) {
++        this.box = box;
++        repaint();
++    }
++
++    @Override
++    public void paint(Graphics g) {
++        g.drawImage(box.image.getScaledInstance(this.getHeight(), this.getWidth(), SCALE_SMOOTH),
++                0, 0, this);
++    }
++}
+diff --git a/res/META-INF/MANIFEST.MF b/resources/META-INF/MANIFEST.MF
+rename from res/META-INF/MANIFEST.MF
+rename to resources/META-INF/MANIFEST.MF
+diff --git a/res/img/users.jpg b/resources/img/users.jpg
+rename from res/img/users.jpg
+rename to resources/img/users.jpg
+index 21508a01c29a3e98edd8f22ed5bec1017975c978..21508a01c29a3e98edd8f22ed5bec1017975c978
+GIT binary patch
+literal 6527
+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
+Jjlh|+{{~QOq?`Z%
+
+diff --git a/res/img/cell.jpg b/resources/img/cell.jpg
+rename from res/img/cell.jpg
+rename to resources/img/cell.jpg
+index 670495650ab0a90e8b1fff503de6085f6f70b5cd..670495650ab0a90e8b1fff503de6085f6f70b5cd
+GIT binary patch
+literal 10238
+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
+Phz@zj_Rd<gzUTf6*%Q<*
+
+diff --git a/res/img/blue.jpg b/resources/img/blue.jpg
+rename from res/img/blue.jpg
+rename to resources/img/blue.jpg
+index 1ea2bc60028b8220790b0924aedcadd55da89784..1ea2bc60028b8220790b0924aedcadd55da89784
+GIT binary patch
+literal 13028
+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
+B$YTHi
+
+diff --git a/res/img/advice.jpg b/resources/img/advice.jpg
+rename from res/img/advice.jpg
+rename to resources/img/advice.jpg
+index 66d6f7c7f579b2fee03c8c2d95dc3dec3feb0a50..66d6f7c7f579b2fee03c8c2d95dc3dec3feb0a50
+GIT binary patch
+literal 10788
+zc%1Dxd0bORx08ji%A%l_F2uOg7eWFEq+*aoaG~sOt>w#d3Bi!W<g&JURj{^wZ7FWl
+zYD>i(wR|pBsjaxR)?J{kts=N$O9eq$bLY*ySpc`^@4fH)>tph}H*?OMbLK2F=gu5>
+z8P;)fBXd-#0K~)qZvcQDuw@JcEYxG5A7FR_8@dmGjPa_qpUxO#reUI&ka`0idh`qt
+z-FHXNilr*RHq&oG&u_q?dm#X$T`m6;6<Qg_jZ4$wT0@#v#|;nXihPBE+%Yp$8ih97
+zFcye>MIy0KC>8~9g#luJq1ZnF0M@q*)7%gO@Ga9i$JB3GJ$+zm90tp*C#Sb93|@~d
+z4Da5yFc}sZ3=z{R+eTuR7j2eL|HI3$5jfFSq=d%+Cj1*X(-2TBq{n{;1;EM9&d%P>
+z$==?{&C$Wp&BMjX$;D&npg|sk1`Ty{qMP~e*^M#4(Q$zD09R*cS9fP;XLsu5>~3Ol
+zdl>=n5OA|Y4w=eg@Bq_|!E$53YsfGgc#MI}V%RX~W;T!o7)-Ve$JWl?!IAOgAo38)
+zGUy5zYzB+TX4=?t>}*(0erV8*#U3_LXfrWhI*2!Kk%;47v~FkE@DUyfhh={L`o&e@
+zwj-A%Hq|xD4FQ8ocjb?YSe~SaJhC1iH>5hb9(%aE;Al<e&6Y`{S8Q0aXXUZqZnbXw
+z{^tv~A5Blq`f$~zy}w+%^EfbShBA9;@#cNUFWqf(1575;mQCwq%drWdRTw55$VM8>
+z;|;PAEh=)SG&r14)#NuqR;ORQEIiReZt!m&$)Oam9Tjk-8Y!`Uh$1q19FEmnRd~Jz
+zqkB|<SAi3Yp3@CTfXj^g?ZzQq8>*rvH(cs8zU9R`B@!OJ{$A6aAB(@g@b|Tb?Yke<
+zK;S>$3j(R+k$1`*m+qwyZ2BP9=vh%59C!TlQQR+nEZ!iQL$pLyLGXAG1PPlU_@=g_
+z^j>Y3Jp@~4h~6!Icf;d#R|dC2(DFMHHs@8dus+c3wviQr)Yn&H_oFVQbXVbou>gYK
+z%EJHLOr~{8$Rou4<Wsg|mvZMt?b?AzB;D0`p>YW!*|y*K8Jc=-Cn5diN>^g_l?Ktc
+z1*f~BHty55EU0YQOKddq9uBT}Ki1d?L8Bak&&IBGyUE<cOKBUs51v2Ld7ro?F#5@e
+zdlyazeOLVFP6)oJY(4Wa1nXz`)R)QLSh#;nMQDZJCyTuQ;d)B1yTw0ov}off=ZLv0
+zb@8(kqZ6`LHWF<W5PV-q`U~7t?_Go7{gSR(5ZnwaD7+ZewF`p%u~D$<E_ncg>n`N#
+zos!n{+iQO)`3{1%eB@0v<xQpc{sp1?*Ut+d8FSL+ZP#BC7ng?V))ss=X2+PAh;-?c
+z)N&03Kh+wyL(se~Cx6C1B<lfrk!U~vt>i44r2ED<g|PZiCo(c8r8D&y1XbHs>E_J1
+zB!yrY(Xa+ZX3}@k!%4^HGv<Zf_%=+Kz9{`mciz>tHX&O%n`f_Lc&zhHUlS(vR-FIo
+z0NF-7-VMPoOX@#!{9W?EfZQwTPK)=tJKT7M_+#{XSaYoNp5&Iq=vPm<EqL2yv7oW=
+za{C)4jVZBz{q|RDWoq8Mod@O%_ADr=F`j#;wX(tE+{3%1hG>u5a?`KQofp+sXso{(
+z`_bSntIBl{_&{*yE(A;LiDIG!O?PAoH<-wh+$8QfR5dkj&3Nx7IR}C>mmsjOwo(@~
+zyq9vVu>CmMJbMDybCc&!yStHx*OZX%qY({33$z=wyiHC9k_&fu4W2vWd*b?C@}i`@
+zy0`;P66n=Ec4qDE*sCRN8!I0dlXKf17)u~f8#kl%bUt<$aqYHO`KPK^x5m{=E|6t=
+z2zUiHI{&jL`TP0!f}pU;G3=3as&NHRG<r--ciYV4rnKa!)2lRiY$mSD#1Tkkbr5I3
+z6J=Vhnx>en!7)senPKVE{~1ay`g5Uq6ID4BMVJbwczR@F`nRPSSW@K7B<o}*hB&=e
+zo0^E>nYvh6x*VZB*j{X3b|`wrvjf;+s5cdG*^}5J8k)eCAj|}|kZt-bIq0nX7Qta^
+zTw~VJNtUTn<0=h334-lu>hPFZQ%yd2i=t=p`}kmBFCWC}aFteLK-eMFP`D1)Sj+<9
+zYMI^&Bq$9rJtKNecn_e#dw^*&wZRI!t;DmeKxBqG!U`bI_J|IX&sCaTWBzs|M1_UZ
+zpBJjH;Bpn(Oj)S*hBdrVdd*X~F!j@PVR}VUvId_tJVA~3ULIj;1@~F_1cMr<@o_oo
+z&;%>mAq$h^T785Rms;0JoHEW}StnHA{2xv`0ZYZ7B|ZtQ+-Knv<!Tc?PA?CgWktKn
+z^;+GGGz<k7#Y?48T0G`V4J06)!n8Q9%}{GKN;8X-WrR|p7k+>RpP*8v^&W7v3?SXC
+zXlmuK8cjNw4>3&3KfS6((PPd%7DyJF_uK#)qz*!F(C{l(m`_V>p<#OqAA{x^ZQ8#M
+zmhhWqVLhVz(Lj)zibmAv%`r2XFzZ%-WyOf-_iXgGU;^kjzXwChY^VEZC&6bn);((Y
+zUq43s!fYF0(-4z}27;#=J?d-n6T{L>SU!#A(0+2IF?QxC(OZWZYI@8v-mv=K1bb3F
+z)>NxUOl_+9ab&xp{1b>WQ4pP%LfApbd;Y+>Df=|WGbB8hz|wkB5YS|*)wDB^GBRzZ
+zMqzj&1ITfqMR{u5^jfmuiM0*FdiDUVMncaLr;RnJRdUQQT|JH3q>MiE*wACZ6bD-x
+zm>khdwyjdH&D8ZlakP4sQf1A*k%<&jER93(0BI(!jlwjTUW#K1TKim`<%8m2BBn6Z
+zi21Yf@3x<nsaN;;EYZ&Ii-|EP`+mAOQZ=3=RrbL-%Q3`<<=~SI(Md7WEUD1Wg6>0X
+zpQhF4O;oFt7EigDjE}aUDeo$<RB0xi3+=NoJ^l>x=@xWfaz~jmT&vdVdpXz5#1Ix`
+z9iY^BTdSe|?QyLReeeueZ^t>Pkt3hNI?3py`V`(#Po>T$(Dc3<W8y;(Q_=)_@NRV1
+zvUlBShzh7_=Q`2r?;X%{1*M)_D4eJ1E9B7rD`WqavH!~0e`V~yGX5X0jHbLhjLs}`
+zOqm#cSHMJ|09qge7~q09kcRp=dJJ@rx?&CaUnsaB9R0ZH$mt7&AP`tiv24?+%GOi{
+zWB^z<;P*5f*NFuJjloAs<!v9iHbamj)d_??z5*~_lB1K#=VCZlhN06#2=BpxN*-6G
+z2;t2Li1Cflg=1-|=sZ1^nD=&)Ja4W%SizG_;EvA`=Va(IFkH&b$xv$y;+zm3EnJNH
+z6k5RJ(j@rY5T2=MIx{AY8?M!3+yI|(e7Vpsh#MH}BMb-*68ZlZRYV;p@C_CS{rSE^
+zv2U>0SI9Lt9-2+BNEIhUOft`fpb(zfsO;=)pKL!LtzIb*1_uWVd_@A0h>s}vhFlFU
+z&Eabd!z~gbFoRsLqVJkq3P$&+Ogx0gvzU;fvx<GDuX+*2#Jrd^Bg0B<z$3Hp7gHOk
+zgMuIdGiWpQax5|n)8NA`><YP+SBK6}w51BU08?Wbh|GZah1RKbmeRztr?U=Qt<j0Y
+z^_UdhDwEJL$`Ys-RJVKaVCW)>h483yH(w~^ivp4?<?c6q{lvb$Cej$R6cp&j`f|it
+zg(@}oWk_RU#FI4!T&kf?${{?2@lmN1Vv#UNDwO-C^8I8oKfa&8zla}{8YJQe1o{Oj
+zf>VQp0SYUBgjSwOd642atz3mxj$~M!Bp&B4mCIzoGX6NZ3`4qL3Vu+4!k@2@Nu@%}
+zFI5&07-W%VI(kdhy`@rGDUifek-uCd6)O0?qQF$XOzuC9FT;d^{NR8fq0B!ZC@|O;
+z$x+C~sak!86fG51hE$0O(sh`U$L&#vK2ahUA?Nr}E7~-1w90_Omup_(iP$`IPp#t8
+z3r{SSQ|mp1C#Qp^;F-~?XSna>6gBZ@r(v2GM#)5G(5B+qQav_NiJbB>3rz4l{SDHr
+z7i<4=!T<MaZ|0MyNi|9grBDHFkDw<sf+wRUcp@=bP$=8c<d!r$f!p8uTYu|s{jI<C
+zxBtA>b5X-I=xC9Ru3^1Oall%N<FMIm8#c$rhGWk`kE0!jW9R7P;Na-s;N)s5mbt#L
+z6lZH|JHTncP*>NX|L;<qTklew13bnkrS7J^i*0~y!(wt6z+8%BGFi_r#W5Kysuahu
+zWuX_-z+kf6*uZAkK;guA&LAmo-XeEV(K=fXQz@*@Z?LRsgnn`J$Z-F}Wu?31h9dzH
+zqnEGWJ#I*n0zX<^Z#OF6-eKq~1uG&aZP+utCV7nK!<#KsF$~LGveHx#drn0zD0*gE
+z&PQKv+5hY1d+lR`C(lyle!O~X#fd8o9p2(8v(xiF`Ks)PlUMI|no4&p8yjQ;+m6M`
+zuvQNz+QcJ`IrA13iPr6Gaz9*EH$2QEL8fo^8{r?mc<{2sk)`roM{Et%0re62Lz0%;
+zQL2s_7wI`#fhPw(T)+G1n6WiCTMAZe*wa_#Nxh1A&(-+_D)+7S+1_~&*g(eBbZ=HF
+zZ^sH!=D&aH>U`swGvqhBPPa_k{@v7VQKyPGy;}cTg}#0FS3iGx`q$M{?}xne@h0Ee
+zwXG0r@;aH)<_JM~1#z3$C~5t*K0$l7ysP=g^$_UFJG+)XEU7+0uFhHIb+)pr`Ga*<
+zYz@M`7DJr;3xdiaC%xJnkc|DrSmXGThT@NRc3gsBfnbH?Zx0AkbPEzYb0sx`fpr}h
+z5IS%LVMWiP(4{0kgZz>hOZ*`q58mi5Z{19;9zSJk$C;E)+4#+9#>&pF{D+m*C7sy5
+z{Y3tc>qwu@%6ojtc?bs0f2X>0`)eUCO_wf)_>5OIbV6{j?(zJT>+^rS)V{3l&Vs_u
+zoRcN+{1VdeljINt?e;37CD30S|A=@mW>@Z-6RQ^r<5i;2VbLd+ZG7jxbfbFm;+64=
+z!&AzZDWa$Ff<^2%8$BU7`v8J`E$N-Rj&x~}H2gUiRxKto10;tk+wB@skiglo^$>hG
+zd2g(+s3nNw;M~FWh}>{u;gW-!Jf|P~vbt>hYUaT0g+;^Sg$F|m4qhzpe&E#}NYrm!
+z+tx&!kaXr<g#cDBT9D<{F;UXwT3vZZqw+5~4uR8h#W!<?r|O*I9!{9X9<%$_q2#qq
+z)qBf7b}0Moi(&C@dqWFK<?2NaU0QNYN%yM|G{>Jcv`cQ47$;~5SaTPGuaA>)vE8iJ
+zl8!ZB&GBl6;OK}eql=>rLBg<#Q%v{QcO5Fj_MJ!=@}?p>84n(~A|mQd?@vCujS2P<
+z4L?9|xDo=7*X~O4$;lAZ+_?*Xqh!{$9wBacZGhnPAJz9DC?sDQbz=P9X=k0{&Wa8d
+zy!Giny^9jxT{dLPq2xK7(2Z`cCr_5vpFEkOK_W7dCkfI!_$*=Dy&QtgXU@S33(2g)
+zUWOAE!+CdfvJZ>0Pcg#sM@{pXnK&}NB9Y-;_TOKOjCcDkbVcd<ceihAJlClqnzRu7
+z92I=-1_aB9){Y8zaq)u89Rw8~6&0Sm*qf&C_!jy354Ovma_eyN;KET3gPV?~UoNyM
+zD~l=`>D|03Vr9gnidj<|zaq{eN9AXe-m}g@VAiu7UMe7QB(&BXb8(6}<|6#``I%eB
+z=W^pV$xqDQ(b{x%f7Id&@$y4cwvEUgnC#}Mu%Fr}CZ1kI=fCOj>z0zv=MR>Xqgy3W
+zv-47>Bh&L<3t``Em@jW5zn*Y>N7r@9^$&7?#ctF~q9l(mHmxaXK5jJDwyP8&UT6z!
+zJaJ70!RthAEmG!luc)pRqt6_)oWA~(gutcSU)V}~4?*?qYqc#uK~P(Vs6L!f__(t3
+z-2(^6?8>fgNz?h`RV3Q5Q;V}8xSNMI^ic=~IL-HJBw8!7)x_t-1El%UD6{NKF3puj
+zV`aPQAFV_<xoVp;nrm}+A_OrmJIG;(`~3@#h@-U+NB=pY(C9fokxbbIL99!YQPNm)
+Nzof9GvUDlD@;?&e6hZ(1
+
+diff --git a/res/img/purple.jpg b/resources/img/purple.jpg
+rename from res/img/purple.jpg
+rename to resources/img/purple.jpg
+index 1411735db46580fd7eae502078f4810062c2ffe8..1411735db46580fd7eae502078f4810062c2ffe8
+GIT binary patch
+literal 12958
+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
+E1v{n0jsO4v
+
+diff --git a/res/img/qeasy.jpg b/resources/img/qeasy.jpg
+rename from res/img/qeasy.jpg
+rename to resources/img/qeasy.jpg
+index a0ad3497125d5a34051bf26e80d569450415339c..a0ad3497125d5a34051bf26e80d569450415339c
+GIT binary patch
+literal 2919
+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
+
