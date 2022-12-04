@@ -1,7 +1,6 @@
 package allreverse;
 
-public enum GameState
-{
+public enum GameState {
     PLAYING,
     LOSER,
     WINNER,

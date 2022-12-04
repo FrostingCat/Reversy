@@ -1,11 +1,15 @@
 package allreverse;
 
-import javax.swing.*;
+import allreverse.Box;
+import allreverse.Constants;
+import allreverse.GameState;
+import allreverse.Ranges;
+
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.function.Function;
 
-public class Game
-{
+public class Game {
     Matrix startMap;
     private final ArrayList<Coord> advices = new ArrayList<>();
     private final ArrayList<Coord> advicesBlue = new ArrayList<>();
@@ -14,6 +18,7 @@ public class Game
     private final ArrayList<Coord> blues = new ArrayList<>();
     private GameState state;
     private boolean purple = true;
+    public boolean buttonPressed = false;
     public GameState getState()
     {
         return state;
@@ -23,8 +28,7 @@ public class Game
         Ranges.setSize(new Coord (cols, rows));
     }
 
-    public void start (String string)
-    {
+    public void start (String string) {
         startMap = new Matrix(Box.CELL);
         startMap.set (new Coord (4, 4), Box.PURPLE);
         startMap.set (new Coord (3, 3), Box.PURPLE);
@@ -53,12 +57,12 @@ public class Game
         }
     }
 
-    public Box getBox (Coord coord) // что будет в той или иной части экрана
+    public Box getBox(Coord coord) // что будет в той или иной части экрана
     {
         return startMap.get(coord);
     }
 
-    public void pressLeftButton (Coord coord)
+    public void pressLeftButton(Coord coord)
     {
         if (advices.size() != 0)
         {
@@ -66,20 +70,40 @@ public class Game
                 mapButton(coord, advices);
                 changeAdvices(advices);
                 checkIfBlue(coord, Box.BLUE, Box.PURPLE);
+                buttonPressed = true;
+            }
+        }
+    }
+
+    public void createBlue(CompletionHandler completionHandler) {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 placeBlue();
-                if (purples.size() + blues.size() == 64) {
-                    checkWinner();
-                }
-                if (purples.isEmpty() || blues.isEmpty()){
-                    endGame ();
-                }
                 checkAdvices(blues, advices, Box.BLUE, Box.PURPLE);
                 for (Coord check : advices)
                 {
                     startMap.set (check, Box.ADVICE);
                 }
+                if (purples.size() + blues.size() == 63) {
+                    checkWinner();
+                }
+                if (purples.isEmpty() || blues.isEmpty()){
+                    endGame();
+                }
+                if (advices.isEmpty() && Game.this.getState() == GameState.PLAYING) {
+                    createBlue(completionHandler);
+                }
+                buttonPressed = false;
+                completionHandler.handle();
             }
-        }
+        }.start();
     }
 
     private void mapButton(Coord coord, ArrayList<Coord> advices) {
@@ -105,85 +129,72 @@ public class Game
         }
     }
 
-    public void pressLeftButtonHuman (Coord coord)
-    {
+    public void pressLeftButtonHuman(Coord coord) {
         if (getBox(coord) == Box.ADVICE) {
             if (purple) {
-                if (!advicesPurple.isEmpty())
-                {
+                if (!advicesPurple.isEmpty()) {
                     mapButton(coord, advicesPurple);
                     checkIfBlue(coord, Box.BLUE, Box.PURPLE);
                     checkAdvices(purples, advicesBlue, Box.PURPLE, Box.BLUE);
                     changeAdvices(advicesPurple);
                     purple = false;
-                    for (Coord check : advicesBlue)
-                    {
-                        startMap.set (check, Box.ADVICE);
+                    for (Coord check : advicesBlue) {
+                        startMap.set(check, Box.ADVICE);
                     }
                 } if (advicesBlue.isEmpty()) {
                     checkAdvices(blues, advicesPurple, Box.BLUE, Box.PURPLE);
                     changeAdvices(advicesBlue);
                     purple = true;
-                    for (Coord check : advicesPurple)
-                    {
-                        startMap.set (check, Box.ADVICE);
+                    for (Coord check : advicesPurple) {
+                        startMap.set(check, Box.ADVICE);
                     }
                 }
             } else {
-                if (!advicesBlue.isEmpty())
-                {
+                if (!advicesBlue.isEmpty()) {
                     startMap.set(coord, Box.BLUE);
                     mapButtonCheck(coord, advicesBlue, blues);
                     checkIfBlue(coord, Box.PURPLE, Box.BLUE);
                     checkAdvices(blues, advicesPurple, Box.BLUE, Box.PURPLE);
                     changeAdvices(advicesBlue);
                     purple = true;
-                    for (Coord check : advicesPurple)
-                    {
-                        startMap.set (check, Box.ADVICE);
+                    for (Coord check : advicesPurple) {
+                        startMap.set(check, Box.ADVICE);
                     }
                 }
                 if (advicesPurple.isEmpty()) {
                     checkAdvices(purples, advicesBlue, Box.PURPLE, Box.BLUE);
                     changeAdvices(advicesPurple);
                     purple = false;
-                    for (Coord check : advicesBlue)
-                    {
-                        startMap.set (check, Box.ADVICE);
+                    for (Coord check : advicesBlue) {
+                        startMap.set(check, Box.ADVICE);
                     }
                 }
             }
-            if (advicesBlue.isEmpty() && advicesPurple.isEmpty())
-            {
-                endGame ();
+            if (advicesBlue.isEmpty() && advicesPurple.isEmpty()) {
+                endGame();
             }
-            if (purples.isEmpty() || blues.isEmpty())
-            {
-                endGame ();
+            if (purples.isEmpty() || blues.isEmpty()) {
+                endGame();
             }
-            if (purples.size() + blues.size() == 64)
-            {
+            if (purples.size() + blues.size() == 64) {
                 checkWinner();
             }
         }
     }
-    private void endGame ()
+    private void endGame()
     {
         state = GameState.NOONE;
     }
 
-    private void checkWinner ()
-    {
-        if (purples.size() > blues.size())
-        {
+    private void checkWinner() {
+        if (purples.size() > blues.size()) {
             state = GameState.WINNER;
         } else {
             state = GameState.LOSER;
         }
     }
 
-    public int getCount ()
-    {
+    public int getCount() {
         if (state == GameState.WINNER) {
             return purples.size();
         } else {
@@ -191,15 +202,13 @@ public class Game
         }
     }
 
-    private double funcSum (int n, int isSide, int putCorner, int putSide)
-    {
+    private double funcSum (int n, int isSide, int putCorner, int putSide) {
         double sum;
         sum = n * isSide + 0.8 * putCorner + 0.4 * putSide;
         return sum;
     }
 
-    private void placeBlue ()
-    {
+    private void placeBlue () {
         ArrayList<Double> allSums = new ArrayList<>();
         ArrayList<Coord> variant = new ArrayList<>();
         ArrayList<Coord> oneBlue = new ArrayList<>();
@@ -447,26 +456,25 @@ public class Game
         cases.clear();
     }
 
-    private void placeAllBlues (Integer oneCase, Coord coord)
-    {
+    private void placeAllBlues (Integer oneCase, Coord coord) {
         int x, y;
         if (oneCase == 0) {
-            x = - 1;
-            y = - 1;
+            x = -1;
+            y = -1;
         } else if (oneCase == 1) {
-            x = - 1;
+            x = -1;
             y = 1;
         } else if (oneCase == 2) {
             x = 1;
-            y = - 1;
+            y = -1;
         } else if (oneCase == 3) {
             x = 1;
             y = 1;
         } else if (oneCase == 4) {
             x = 0;
-            y = - 1;
+            y = -1;
         } else if (oneCase == 5) {
-            x = - 1;
+            x = -1;
             y = 0;
         } else if (oneCase == 6) {
             x = 0;
@@ -475,28 +483,25 @@ public class Game
             x = 1;
             y = 0;
         }
-        addSecond (Box.BLUE, coord);
+        addSecond(Box.BLUE, coord);
         coord.x -= x;
         coord.y -= y;
-        while (getBox(coord) == Box.PURPLE)
-        {
+        while (getBox(coord) == Box.PURPLE) {
             startMap.set (coord, Box.BLUE);
-            addSecond (Box.BLUE, coord);
+            addSecond(Box.BLUE, coord);
             coord.x -= x;
             coord.y -= y;
         }
     }
 
-    private void checkIfBlue (Coord check, Box first, Box intoSecond)
-    {
+    private void checkIfBlue (Coord check, Box first, Box intoSecond) {
         int x = check.x;
         int y = check.y;
         int stop = 0;
 
         // случай 1: слева сверху
         Coord coord = new Coord(x - 1, y - 1);
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.x == 0 || coord.y == 0) {
                 stop = 1;
                 break;
@@ -507,10 +512,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x - 1) {
             coord.x = x - 1;
             coord.y = y - 1;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.x -= 1;
                 coord.y -= 1;
             }
@@ -520,10 +524,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x - 1) {
             coord.x = x - 1;
             coord.y = y + 1;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.x -= 1;
                 coord.y += 1;
             }
@@ -533,10 +536,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x + 1) {
             coord.x = x + 1;
             coord.y = y - 1;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.x += 1;
                 coord.y -= 1;
             }
@@ -546,10 +548,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x + 1) {
             coord.x = x + 1;
             coord.y = y + 1;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.x += 1;
                 coord.y += 1;
             }
@@ -559,10 +560,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.y != y - 1) {
             coord.x = x;
             coord.y = y - 1;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.y -= 1;
             }
         }
@@ -571,10 +571,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x - 1) {
             coord.x = x - 1;
             coord.y = y;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.x -= 1;
             }
         }
@@ -583,10 +582,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.y != y - 1) {
             coord.x = x;
             coord.y = y + 1;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.y += 1;
             }
         }
@@ -595,10 +593,9 @@ public class Game
         if (getBox(coord) == intoSecond && stop != 1 && coord.x != x + 1) {
             coord.x = x + 1;
             coord.y = y;
-            while (getBox(coord) == first)
-            {
-                startMap.set (coord, intoSecond);
-                addSecond (intoSecond, coord);
+            while (getBox(coord) == first) {
+                startMap.set(coord, intoSecond);
+                addSecond(intoSecond, coord);
                 coord.x += 1;
             }
         }
@@ -610,8 +607,7 @@ public class Game
         coord.y = y;
         stop = 0;
 
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.x == 7) {
                 stop = 1;
                 break;
@@ -627,8 +623,7 @@ public class Game
         coord.y = y + 1;
         stop = 0;
 
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.y == 7) {
                 stop = 1;
                 break;
@@ -644,8 +639,7 @@ public class Game
         coord.y = y;
         stop = 0;
 
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.x == 0) {
                 stop = 1;
                 break;
@@ -661,8 +655,7 @@ public class Game
         coord.y = y - 1;
         stop = 0;
 
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.y == 0) {
                 stop = 1;
                 break;
@@ -678,8 +671,7 @@ public class Game
         coord.y = y + 1;
         stop = 0;
 
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.x == 7 || coord.y == 7) {
                 stop = 1;
                 break;
@@ -696,8 +688,7 @@ public class Game
         coord.y = y - 1;
         stop = 0;
 
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.x == 7 || coord.y == 0) {
                 stop = 1;
                 break;
@@ -714,8 +705,7 @@ public class Game
         coord.y = y + 1;
         stop = 0;
 
-        while (getBox(coord) == first)
-        {
+        while (getBox(coord) == first) {
             if (coord.x == 0 || coord.y == 7) {
                 stop = 1;
                 break;
@@ -726,29 +716,24 @@ public class Game
         return stop;
     }
 
-    private void addSecond (Box addInto, Coord coord)
-    {
+    private void addSecond (Box addInto, Coord coord) {
         if (addInto == Box.PURPLE) {
             removeAdvice(coord, blues, purples);
         } else {
             mapButtonCheck(coord, purples, blues);
         }
     }
-    private void checkBox (Coord check, ArrayList<Coord> adv)
-    {
+    private void checkBox (Coord check, ArrayList<Coord> adv) {
         if (getBox(check) == Box.CELL || getBox(check) == Box.ADVICE)
         {
             int contains = 0;
-            for (Coord one : adv)
-            {
-                if (check.x == one.x && check.y == one.y)
-                {
+            for (Coord one : adv) {
+                if (check.x == one.x && check.y == one.y) {
                     contains = 1;
                     break;
                 }
             }
-            if (contains == 0)
-            {
+            if (contains == 0) {
                 adv.add(new Coord(check.x, check.y));
             }
         }
@@ -759,8 +744,7 @@ public class Game
         return 0 <= coord.x && coord.x <= 7 && 0 <= coord.y && coord.y <= 7;
     }
 
-    private void checkAdvices (ArrayList<Coord> dots, ArrayList<Coord> adv, Box colorfrom, Box colorinto)
-    {
+    private void checkAdvices (ArrayList<Coord> dots, ArrayList<Coord> adv, Box colorfrom, Box colorinto) {
         for (Coord dot : dots) {
             int x = dot.x;
             int y = dot.y;
@@ -824,11 +808,9 @@ public class Game
         }
     }
 
-    private void changeAdvices (ArrayList<Coord> list)
-    {
-        for (Coord coord : list)
-        {
-            startMap.set ( coord, Box.CELL);
+    private void changeAdvices (ArrayList<Coord> list) {
+        for (Coord coord : list) {
+            startMap.set(coord, Box.CELL);
         }
         list.clear();
     }

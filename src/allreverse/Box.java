@@ -1,4 +1,5 @@
 package allreverse;
+import java.awt.*;
 
 public enum Box {
     ADVICE,
@@ -8,5 +9,5 @@ public enum Box {
     QEASY,
     USERS;
 
-    public Object image;
+    public Image image;
 }
